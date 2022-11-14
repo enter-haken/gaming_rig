@@ -14,4 +14,4 @@ connect:
 	dcvviewer config.dcv
 
 docs:
-	terraform-docs markdown table --output-file ./rig/README.md --output-mode replace ./rig
+	terraform-docs markdown table --output-file README.md --output-mode replace ./rig

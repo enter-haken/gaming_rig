@@ -103,7 +103,7 @@ The availability zones are stored within an array.
 The count of these vary from region to region.
 The first zone found is taken as the default zone.
 
-I have some **problems with the mouse** while playing.
+I had some **problems with the mouse** while playing.
 There is a mouse setting available (Ctrl shift F8) to use the relative mouse position.
 
 ## possible instances

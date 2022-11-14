@@ -50,12 +50,13 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_availability_zone"></a> [availability\_zone](#output\_availability\_zone) | used availability zone for the instance |
+| <a name="output_availability_zone"></a> [availability\_zone](#output\_availability\_zone) | Used availability zone for the instance |
 | <a name="output_city"></a> [city](#output\_city) | n/a |
 | <a name="output_instance_id"></a> [instance\_id](#output\_instance\_id) | The id for the gaming rig ec2 instance |
 | <a name="output_instance_ip"></a> [instance\_ip](#output\_instance\_ip) | The external ip address for the gaming rig instance |
 | <a name="output_instance_public_dns"></a> [instance\_public\_dns](#output\_instance\_public\_dns) | The dns entry for the gaming rig instance |
-| <a name="output_instance_type"></a> [instance\_type](#output\_instance\_type) | current spot instance price |
+| <a name="output_instance_type"></a> [instance\_type](#output\_instance\_type) | Requested instance type |
 | <a name="output_local_ip"></a> [local\_ip](#output\_local\_ip) | You current external ip address. |
-| <a name="output_price"></a> [price](#output\_price) | spot price for the configured availability zone |
+| <a name="output_request_price"></a> [request\_price](#output\_request\_price) | Requested price configured for the spot instance request |
+| <a name="output_spot_price"></a> [spot\_price](#output\_spot\_price) | Current spot price for the configured availability zone |
 <!-- END_TF_DOCS -->

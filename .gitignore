@@ -2,6 +2,7 @@ rig-windows-key-pair.pem
 awsping
 debug.log
 config.dcv
+.terraform.lock.hcl
 
 # Created by https://www.toptal.com/developers/gitignore/api/vim,terraform
 # Edit at https://www.toptal.com/developers/gitignore?templates=vim,terraform

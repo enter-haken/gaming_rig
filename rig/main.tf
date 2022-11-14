@@ -87,7 +87,7 @@ resource "aws_iam_instance_profile" "windows_instance_profile" {
 
 resource "aws_spot_instance_request" "rig_instance" {
   ami                  = local.snapshot_exists ? "" : data.aws_ami.aws_windows_ami.image_id
-  spot_price           = tostring(tonumber(local.price) + var.increase_bet_by)
+  spot_price           = local.request_price
   instance_type        = var.instance_type
   availability_zone    = local.availability_zone
   key_name             = aws_key_pair.key_pair.key_name

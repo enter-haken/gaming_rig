@@ -7,19 +7,24 @@ output "local_ip" {
   value       = data.external.your_location.result.ip
 }
 
-output "price" {
-  value       = local.price
-  description = "spot price for the configured availability zone"
+output "spot_price" {
+  value       = local.spot_price
+  description = "Current spot price for the configured availability zone"
+}
+
+output "request_price" {
+  value       = local.request_price
+  description = "Requested price configured for the spot instance request"
 }
 
 output "availability_zone" {
-  description = "used availability zone for the instance"
+  description = "Used availability zone for the instance"
   value       = local.availability_zone
 }
 
 output "instance_type" {
   value       = var.instance_type
-  description = "current spot instance price"
+  description = "Requested instance type"
 }
 
 output "instance_id" {

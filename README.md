@@ -2,6 +2,24 @@
 
 Cloud gaming provided by yourself.
 
+With this terraform project, you can create a Windows instance with
+
+* Nice DCV Server installed
+* current NVIDIA Grid drivers
+* and Steam
+
+It uses **spot instances** in a **region next to you**.
+
+When the instance is provisioned, you can start installing your games.
+
+In best case
+
+* spot instances are available
+* instance price is high enough
+* all necessary software is installed
+
+you can **start with zero configuration**.
+
 ## before you start
 
 you have to **create an AWS account** if none exists yet.

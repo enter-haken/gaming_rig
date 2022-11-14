@@ -32,6 +32,7 @@ You can use the tool version manager `asdf` for installing.
 
 * awscli
 * terraform
+* terraform-docs
 * jq
 
 Install `asdf` according the [documentation][1]
@@ -41,6 +42,7 @@ For the **first time run** you need to add the needed **plugins** by
 ```
 $ asdf plugin add awscli
 $ asdf plugin add terraform
+$ asdf plugin add terraform-docs
 $ asdf plugin add jq
 ```
 

@@ -71,9 +71,8 @@ $ make connect
 
 will connect you to the instance.
 
-On the Desktop you can find an `provisioning` folder, which contains some log files about the provisioning.
-You can easily delete this folder if you like.
-
+On the desktop you will find a `$home\Desktop\provisioning` folder that contains some log files about the deployment. 
+You can simply delete this folder if you want.
 
 ## troubleshooting
 

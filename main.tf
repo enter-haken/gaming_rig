@@ -2,9 +2,7 @@ provider "aws" {
   region = data.external.nearest_region.result.region
   default_tags {
     tags = {
-      LB-CostAllocation = "Development-general"
-      LB-ResourceGroup  = "Development-general"
-      LB-Customer       = "JanH tests"
+      App = "Gaming Rig"
     }
   }
 }

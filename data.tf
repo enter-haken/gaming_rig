@@ -2,7 +2,7 @@ data "external" "all_necessary_commands_are_available" {
   program = ["${path.module}/scripts/all_necessary_commands_are_available.sh"]
   lifecycle {
     postcondition {
-      condition     = self.result.jq && self.result.wget && self.result.curl && self.result.tar && self.result.awk && self.result.dcvviewer
+      condition     = self.result.jq && self.result.wget && self.result.curl && self.result.tar && self.result.awk 
       error_message = <<-EOT
       Some of neccessary commands can not be found.
       

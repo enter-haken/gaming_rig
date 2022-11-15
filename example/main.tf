@@ -2,7 +2,7 @@ provider "aws" {
   region = data.external.nearest_region.result.region
   default_tags {
     tags = {
-      App = "Gaming Rig"
+      App = "gaming-rig"
     }
   }
 }
@@ -43,8 +43,29 @@ data "external" "nearest_region" {
 }
 
 module "gaming_rig" {
-  source          = ".."
+  source = "./.."
+  #
+  # Increase the current bet by 0.1 says, that you would pay 10 cent more
+  # than the current spot price.
+  #
+  # This reduces the chance of beeing terminated.
+  #
   increase_bet_by = 0.1
+  #
+  # eu-central-1 has three availability zones:
+  #
+  # * eu-central-1a
+  # * eu-central-1b
+  # * eu-central-1c
+  #
+  # The g5 instances can be found in 1b and 1c
+  #
+  # so you can choose between
+  #
+  # * 0 -> eu-central-1b
+  # * 1 -> eu-central-1c
+  #
+  availability_zone = 1
 }
 
 output "gaming-rig" {

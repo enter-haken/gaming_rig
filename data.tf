@@ -15,12 +15,10 @@ data "external" "all_necessary_commands_are_available" {
       * curl
       * tar
       * awk
-      * dcvviewer
       
       to proceed.
       
       Hint: `aws`, `terraform` and `jq` can be installed with `asdf install`.
-      Hint: For installing `dcvviewer`, see ../dcv/README.md.
       EOT
     }
   }

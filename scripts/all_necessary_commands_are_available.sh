@@ -14,7 +14,6 @@ cat << JSON_OUTPUT_FOR_TERRAFORM
   "wget": "$(exists 'wget')",
   "curl": "$(exists 'curl')",
   "tar": "$(exists 'tar')",
-  "awk": "$(exists 'awk')",
-  "dcvviewer": "$(exists 'dcvviewer')"
+  "awk": "$(exists 'awk')"
 }
 JSON_OUTPUT_FOR_TERRAFORM

@@ -1,57 +1,119 @@
-provider "aws" {
-  region = data.external.nearest_region.result.region
-  default_tags {
-    tags = {
-      App = "Gaming Rig"
-    }
+# Generates a secure private key and encodes it as PEM
+# https://gmusumeci.medium.com/how-to-deploy-a-windows-server-ec2-instance-in-aws-using-terraform-dd86a5dbf731
+# https://github.com/KopiCloud/terraform-aws-windows-ec2-instance
+
+resource "tls_private_key" "key_pair" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "key_pair" {
+  key_name   = "${var.prefix}-windows-key-pair"
+  public_key = tls_private_key.key_pair.public_key_openssh
+}
+
+resource "local_file" "ssh_key" {
+  filename = "${aws_key_pair.key_pair.key_name}.pem"
+  content  = tls_private_key.key_pair.private_key_pem
+}
+
+resource "aws_security_group" "default" {
+  name        = "${var.prefix}-sg"
+  description = "Rules for ${var.prefix}"
+
+  ingress {
+    from_port   = 3389
+    to_port     = 3389
+    protocol    = "tcp"
+    cidr_blocks = ["${data.external.your_location.result.ip}/32"]
+    description = "Allow rdp connection from one client"
+  }
+
+  ingress {
+    from_port   = 8443
+    to_port     = 8443
+    protocol    = "udp"
+    cidr_blocks = ["${data.external.your_location.result.ip}/32"]
+    description = "NICE DCV QUIC (IPv4)"
+  }
+
+  ingress {
+    from_port   = 8443
+    to_port     = 8443
+    protocol    = "tcp"
+    cidr_blocks = ["${data.external.your_location.result.ip}/32"]
+    description = "NICE DCV (IPv4)"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all traffic"
   }
 }
 
-data "external" "nearest_region" {
-  program = ["./nearest_aws_region.sh"]
+resource "aws_iam_role" "windows_instance_role" {
+  name = "${var.prefix}-instance-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "nvidia_driver_get_object_policy_attachment" {
+  role       = aws_iam_role.windows_instance_role.name
+  policy_arn = data.aws_iam_policy.nvidia_driver_get_object_policy.arn
+}
+
+resource "aws_iam_instance_profile" "windows_instance_profile" {
+  name = "${var.prefix}-instance-profile"
+  role = aws_iam_role.windows_instance_role.name
+}
+
+# TODO: get snapshot ami if exists
+# TODO: create lambda for creating ami before termination
+# - delete volume after snapshot -> reduce storage costs
+
+resource "aws_spot_instance_request" "rig_instance" {
+  ami                  = local.snapshot_exists ? "" : data.aws_ami.aws_windows_ami.image_id
+  spot_price           = local.request_price
+  instance_type        = var.instance_type
+  availability_zone    = local.availability_zone
+  key_name             = aws_key_pair.key_pair.key_name
+  security_groups      = [aws_security_group.default.name]
+  wait_for_fulfillment = true
+  get_password_data    = true
+  user_data = templatefile("${path.module}/provisioning.tpl", {
+
+  })
+  spot_type            = "one-time"
+  iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
+  valid_until          = timeadd(timestamp(), "10m")
+
+  root_block_device {
+    volume_size = "256"
+    volume_type = "gp3"
+  }
   lifecycle {
     postcondition {
-      condition     = self.result.region != ""
-      error_message = <<-EOT
-      Could not determine a vailid region.
-      
-      The script ./nearest_aws_region.sh tries to determine the closest region,
-      by pinging all of them.
-      
-      A sample invocation can look like
-      
-      $ ./awsping -verbose 1 -repeats 3
-            Code            Region                                      Latency
-          0 eu-central-1    Europe (Frankfurt)                         22.00 ms
-          1 eu-west-2       Europe (London)                            32.09 ms
-          2 eu-west-1       Europe (Ireland)                           42.02 ms
-          3 us-east-1       US-East (Virginia)                        107.47 ms
-          4 us-east-2       US-East (Ohio)                            116.17 ms
-          5 ap-south-1      Asia Pacific (Mumbai)                     137.07 ms
-          6 us-west-1       US-West (California)                      169.77 ms
-          7 ap-southeast-1  Asia Pacific (Singapore)                  187.05 ms
-          8 us-west-2       US-West (Oregon)                          187.93 ms
-          9 sa-east-1       South America (São Paulo)                 229.03 ms
-         10 ap-northeast-2  Asia Pacific (Seoul)                      242.71 ms
-         11 ap-northeast-1  Asia Pacific (Tokyo)                      271.38 ms
-         12 ap-southeast-2  Asia Pacific (Sydney)                     287.72 ms
-      
-      Try to execute the script outsite of terraform to get more information.
-      EOT
+      condition     = self.password_data != ""
+      error_message = "could not retrieve password"
+    }
+
+    postcondition {
+      condition     = self.public_ip != ""
+      error_message = "The running container needs a public ip"
     }
   }
-}
-
-module "gaming_rig" {
-  source = "./rig"
-
-  prefix               = "rig"
-  instance_type        = "g5.xlarge"
-  force_reinstallation = true
-  increase_bet_by      = 0
-  availability_zone    = 0
-}
-
-output "gaming-rig" {
-  value = module.gaming_rig
 }

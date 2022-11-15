@@ -58,8 +58,8 @@ function install_nvidia_drivers() {
 function cleanup() {
     Remove-Item -Recurse -Force $ProvisioningBasePath\NVIDIA 
     Remove-Item -Recurse -Force $ProvisioningBasePath\dcv
-    Remove-Item '$home\Desktop\EC2 Feedback.website'
-    Remove-Item '$home\Desktop\EC2 Microsoft Windows Guide.website'
+    Remove-Item 'C:\Users\Administrator\EC2 Feedback.website'
+    Remove-Item 'C:\Users\Administrator\EC2 Microsoft Windows Guide.website'
 }
 
 function disable_licensing_page {

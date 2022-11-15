@@ -37,14 +37,3 @@ variable "availability_zone" {
   type        = number
   default     = 0
 }
-
-variable "force_reinstallation" {
-  description = <<-EOT
-  An existing snapshot is ignored.
-
-  This forces a reinstallation of the whole system.
-
-  All data will be lost.
-  EOT
-  default     = false
-}

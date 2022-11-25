@@ -65,7 +65,7 @@ and the **DCV viewer** for accessing your instance
 
 ### install DCV viewer
 
-In the `./dcv` folder you can find additional information about installing the viewer.
+In the `./example/dcv` folder you can find additional information about installing the viewer.
 
 After the gameserver is provisioned, you can use the **DCV viewer** to connect to your gaming rig.
 

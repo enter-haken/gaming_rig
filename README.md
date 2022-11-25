@@ -85,6 +85,19 @@ You can also use a [script][3], like it is used in the example folder.
 
 ## troubleshooting
 
+### quotas
+
+You have to check your current vCPU quotas for creating g5 ec2 instances.
+
+The interesting quotas are
+
+* `All G and VT Spot Instance Requests`
+* `Running On-Demand G and VT instances`
+
+You can **request a quota increase** at the **Service Quota Console**.
+
+### spot instances
+
 When you getting errors during requesting a spot instance, you can
 **increase your bet** by setting the `increase_bet_by` variable.
 

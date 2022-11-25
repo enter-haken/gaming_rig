@@ -86,6 +86,7 @@ resource "aws_iam_instance_profile" "windows_instance_profile" {
 # - delete volume after snapshot -> reduce storage costs
 
 resource "aws_spot_instance_request" "rig_instance" {
+  count                = var.use_spot_instance ? 1 : 0
   ami                  = local.snapshot_exists ? "" : data.aws_ami.aws_windows_ami.image_id
   spot_price           = local.request_price
   instance_type        = var.instance_type
@@ -94,26 +95,33 @@ resource "aws_spot_instance_request" "rig_instance" {
   security_groups      = [aws_security_group.default.name]
   wait_for_fulfillment = true
   get_password_data    = true
-  user_data = templatefile("${path.module}/provisioning.tpl", {
-
-  })
+  user_data            = file("${path.module}/provisioning.tpl")
   spot_type            = "one-time"
   iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
   valid_until          = timeadd(timestamp(), "10m")
 
   root_block_device {
+    delete_on_termination = false
+    volume_size           = "256"
+    volume_type           = "gp3"
+  }
+}
+
+resource "aws_instance" "rig_instance" {
+  count = var.use_spot_instance ? 0 : 1
+  ami   = local.snapshot_exists ? "" : data.aws_ami.aws_windows_ami.image_id
+  #snapshot_id       = local.snapshot_id
+  instance_type        = var.instance_type
+  availability_zone    = local.availability_zone
+  key_name             = aws_key_pair.key_pair.key_name
+  security_groups      = [aws_security_group.default.name]
+  get_password_data    = true
+  user_data            = file("${path.module}/provisioning.tpl")
+  iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
+
+  root_block_device {
+    delete_on_termination = false
     volume_size = "256"
     volume_type = "gp3"
-  }
-  lifecycle {
-    postcondition {
-      condition     = self.password_data != ""
-      error_message = "could not retrieve password"
-    }
-
-    postcondition {
-      condition     = self.public_ip != ""
-      error_message = "The running container needs a public ip"
-    }
   }
 }

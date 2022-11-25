@@ -1,5 +1,10 @@
 # Changelog
 
+## untagged 
+
+- added vCPU quota check
+- use either spot instances or on demand g5 instances
+
 ## [0.1.0] - 2022-11-15
 
 ### Added 

@@ -66,6 +66,7 @@ module "gaming_rig" {
   # * 1 -> eu-central-1c
   #
   availability_zone = 1
+  use_spot_instance = false 
 }
 
 output "gaming-rig" {

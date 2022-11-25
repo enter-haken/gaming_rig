@@ -37,3 +37,9 @@ variable "availability_zone" {
   type        = number
   default     = 0
 }
+
+variable "use_spot_instance" {
+  description = "use spot instance if available"
+  type        = bool
+  default     = true
+}

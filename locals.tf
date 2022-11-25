@@ -17,5 +17,6 @@ locals {
     }
   ]), var.availability_zone).price
   request_price = tostring(tonumber(local.spot_price) + var.increase_bet_by)
-  snapshot_exists = length(data.aws_ami_ids.list_of_own_amis.ids) > 0
+  snapshot_exists = length(data.aws_ebs_snapshot_ids.rig_snapshots.ids) > 0
+  snapshot_id = element(data.aws_ebs_snapshot_ids.rig_snapshots.ids, 1)
 }

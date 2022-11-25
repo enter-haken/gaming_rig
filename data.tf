@@ -2,7 +2,7 @@ data "external" "all_necessary_commands_are_available" {
   program = ["${path.module}/scripts/all_necessary_commands_are_available.sh"]
   lifecycle {
     postcondition {
-      condition     = self.result.jq && self.result.wget && self.result.curl && self.result.tar && self.result.awk 
+      condition     = self.result.jq && self.result.wget && self.result.curl && self.result.tar && self.result.awk
       error_message = <<-EOT
       Some of neccessary commands can not be found.
       
@@ -42,7 +42,9 @@ data "aws_iam_policy" "nvidia_driver_get_object_policy" {
   arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
-# check, if g5.xlarge is available in a availability zone
+#
+# Check the availabilitiy for g5 instances within a region
+#
 data "aws_ec2_instance_type_offerings" "offerings" {
   filter {
     name   = "instance-type"
@@ -61,6 +63,9 @@ data "aws_ec2_instance_type_offerings" "offerings" {
   }
 }
 
+#
+# Gets the spot prices for each availability zone, where g5 instances are available
+#
 data "aws_ec2_spot_price" "spot_prices" {
   for_each          = toset(data.aws_ec2_instance_type_offerings.offerings.locations)
   instance_type     = var.instance_type
@@ -90,9 +95,15 @@ data "aws_ami" "aws_windows_ami" {
   }
 }
 
-# TODO: this call expects exactly one result
-# When we start there is no snapshot.
-# -> Find an other way to list custom amis / snapshots
-data "aws_ami_ids" "list_of_own_amis" {
+# TODO: use snapshot for instance launch
+#
+# gets a list of snapshots
+# only one snapshot should be available at one time
+#
+# Assumption:
+# When there are more than one snapshot in place, a new snapshot
+# is created currently.
+#
+data "aws_ebs_snapshot_ids" "rig_snapshots" {
   owners = ["self"]
 }

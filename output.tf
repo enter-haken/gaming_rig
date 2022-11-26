@@ -58,12 +58,12 @@ output "instance" {
 }
 
 output "instance_id" {
-  value       = var.use_spot_instance ? one(aws_spot_instance_request.rig_instance[*].spot_instance_id) : one(aws_instance.rig_instance[*].id)
+  value       = local.instance_id  
   description = "The id for the gaming rig ec2 instance"
 }
 
 output "instance_ip" {
-  value       = var.use_spot_instance ? one(aws_spot_instance_request.rig_instance[*].public_ip) : one(aws_instance.rig_instance[*].public_ip)
+  value       = local.instance_ip 
   description = "The external ip address for the gaming rig instance"
 }
 

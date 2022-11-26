@@ -11,4 +11,4 @@ config:
 	./create_nice_dcv_config_file.sh
 
 connect:
-	dcvviewer config.dcv
+	./connect.sh

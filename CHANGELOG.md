@@ -2,6 +2,7 @@
 
 ## untagged 
 
+- added lambda for snapshot creation
 - added vCPU quota check
 - use either spot instances or on demand g5 instances
 

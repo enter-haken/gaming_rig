@@ -15,7 +15,7 @@ variable "rig_ami_name" {
 
 variable "rig_ami_root_ebs_size" {
   description = "Size of the root_ebs_volume of the image."
-  default     = 8
+  default     = 256
 }
 
 variable "instance_type" {

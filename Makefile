@@ -1,4 +1,5 @@
 review:
+	make -C ./on_ec2_termination clean build
 	terraform init 
 	terraform fmt -check
 	terraform validate

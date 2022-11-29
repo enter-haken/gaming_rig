@@ -1,0 +1,18 @@
+{
+  "version": "2.0",
+  "app_name": "gaming_rig",
+  "stages": {
+    "dev": {
+      "autogen_policy": true
+    },
+    "prod": {
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json",
+      "environment_variables": {
+        "APP_TAG": "${var.app_tag}",
+        "RIG_AMI_NAME": "${var.rig_ami_name}",
+        "RIG_AMI_ROOT_EBS_SIZE": "${var.rig_ami_root_ebs_size}"
+      }
+    }
+  }
+}

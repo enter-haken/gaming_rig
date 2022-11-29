@@ -84,10 +84,8 @@ data "aws_ec2_spot_price" "spot_prices" {
   }
 }
 
-# This is our base image for the installation.
-# When there is no snapshot found, this image 
-# will be taken.
 data "aws_ami" "aws_windows_ami" {
+  count       = var.use_own_ami ? 0 : 1
   most_recent = true
   filter {
     name   = "name"
@@ -95,15 +93,14 @@ data "aws_ami" "aws_windows_ami" {
   }
 }
 
-# TODO: use snapshot for instance launch
-#
-# gets a list of snapshots
-# only one snapshot should be available at one time
-#
-# Assumption:
-# When there are more than one snapshot in place, a new snapshot
-# is created currently.
-#
-data "aws_ebs_snapshot_ids" "rig_snapshots" {
+data "aws_ami" "rig_ami" {
+  count       = var.use_own_ami ? 1 : 0
+  most_recent = true
+
   owners = ["self"]
+
+  filter {
+    name   = "name"
+    values = [var.rig_ami_name]
+  }
 }

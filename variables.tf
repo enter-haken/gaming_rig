@@ -3,6 +3,21 @@ variable "prefix" {
   default     = "rig"
 }
 
+variable "app_tag" {
+  description = "application tag"
+  default     = "gaming-rig"
+}
+
+variable "rig_ami_name" {
+  description = "ami_name"
+  default     = "gaming-rig"
+}
+
+variable "rig_ami_root_ebs_size" {
+  description = "Size of the root_ebs_volume of the image."
+  default     = 8
+}
+
 variable "instance_type" {
   description = "prefered instance type for the gaming rig"
   default     = "g5.xlarge"
@@ -27,9 +42,15 @@ variable "instance_type" {
 }
 
 variable "increase_bet_by" {
-  description = "increase the current bet by x (eg.: 0.2)"
+  description = "increase the current bet by x (e.g.: 0.2)"
   type        = number
   default     = 0
+}
+
+variable "bet_valid_until" {
+  description = "guarant price bet for given time (e.g. 1h)"
+  type        = string
+  default     = "1h"
 }
 
 variable "availability_zone" {
@@ -42,4 +63,10 @@ variable "use_spot_instance" {
   description = "use spot instance if available"
   type        = bool
   default     = true
+}
+
+variable "use_own_ami" {
+  description = "Try to use own ami."
+  type        = bool
+  default     = false
 }

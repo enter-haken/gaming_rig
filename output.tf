@@ -53,17 +53,17 @@ output "use_spot_instance" {
 }
 
 output "instance" {
-  value = aws_instance.rig_instance
+  value       = aws_instance.rig_instance
   description = "whole rig instance"
 }
 
 output "instance_id" {
-  value       = local.instance_id  
+  value       = local.instance_id
   description = "The id for the gaming rig ec2 instance"
 }
 
 output "instance_ip" {
-  value       = local.instance_ip 
+  value       = local.instance_ip
   description = "The external ip address for the gaming rig instance"
 }
 

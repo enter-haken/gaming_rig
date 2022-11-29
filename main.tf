@@ -2,6 +2,13 @@
 # https://gmusumeci.medium.com/how-to-deploy-a-windows-server-ec2-instance-in-aws-using-terraform-dd86a5dbf731
 # https://github.com/KopiCloud/terraform-aws-windows-ec2-instance
 
+module "snapshot_lambda" {
+  source                = "./on_ec2_termination/build"
+  app_tag               = var.app_tag
+  rig_ami_name          = var.rig_ami_name
+  rig_ami_root_ebs_size = var.rig_ami_root_ebs_size
+}
+
 resource "tls_private_key" "key_pair" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -81,13 +88,9 @@ resource "aws_iam_instance_profile" "windows_instance_profile" {
   role = aws_iam_role.windows_instance_role.name
 }
 
-# TODO: get snapshot ami if exists
-# TODO: create lambda for creating ami before termination
-# - delete volume after snapshot -> reduce storage costs
-
 resource "aws_spot_instance_request" "rig_instance" {
   count                = var.use_spot_instance ? 1 : 0
-  ami                  = local.snapshot_exists ? "" : data.aws_ami.aws_windows_ami.image_id
+  ami                  = var.use_own_ami ? data.aws_ami.rig_ami[0].image_id : data.aws_ami.aws_windows_ami[0].image_id
   spot_price           = local.request_price
   instance_type        = var.instance_type
   availability_zone    = local.availability_zone
@@ -95,33 +98,32 @@ resource "aws_spot_instance_request" "rig_instance" {
   security_groups      = [aws_security_group.default.name]
   wait_for_fulfillment = true
   get_password_data    = true
-  user_data            = file("${path.module}/provisioning.tpl")
+  user_data            = var.use_own_ami ? "" : file("${path.module}/provisioning.tpl")
   spot_type            = "one-time"
   iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
-  valid_until          = timeadd(timestamp(), "10m")
+  valid_until          = timeadd(timestamp(), var.bet_valid_until)
 
   root_block_device {
     delete_on_termination = false
-    volume_size           = "256"
+    volume_size           = var.rig_ami_root_ebs_size
     volume_type           = "gp3"
   }
 }
 
 resource "aws_instance" "rig_instance" {
-  count = var.use_spot_instance ? 0 : 1
-  ami   = local.snapshot_exists ? "" : data.aws_ami.aws_windows_ami.image_id
-  #snapshot_id       = local.snapshot_id
+  count                = var.use_spot_instance ? 0 : 1
+  ami                  = var.use_own_ami ? data.aws_ami.rig_ami[0].image_id : data.aws_ami.aws_windows_ami[0].image_id
   instance_type        = var.instance_type
   availability_zone    = local.availability_zone
   key_name             = aws_key_pair.key_pair.key_name
   security_groups      = [aws_security_group.default.name]
   get_password_data    = true
-  user_data            = file("${path.module}/provisioning.tpl")
+  user_data            = var.use_own_ami ? "" : file("${path.module}/provisioning.tpl")
   iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
 
   root_block_device {
     delete_on_termination = false
-    volume_size = "256"
-    volume_type = "gp3"
+    volume_size           = var.rig_ami_root_ebs_size
+    volume_type           = "gp3"
   }
 }

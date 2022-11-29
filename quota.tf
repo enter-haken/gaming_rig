@@ -2,12 +2,12 @@
 # Checks the vCPU quota for requesting spot instances
 #
 data "aws_servicequotas_service_quota" "spot_instance_quota" {
-  count = var.use_spot_instance ? 1 : 0
-  quota_name = "All G and VT Spot Instance Requests"
+  count        = var.use_spot_instance ? 1 : 0
+  quota_name   = "All G and VT Spot Instance Requests"
   service_code = "ec2"
   lifecycle {
     postcondition {
-      condition = self.value > 3
+      condition     = self.value > 3
       error_message = <<-EOT
       You need at least a quota for 4vCPUs to make a g5.xlarge spot instance request
 
@@ -32,12 +32,12 @@ data "aws_servicequotas_service_quota" "spot_instance_quota" {
 # Checks the vCPU quota for requesting ondemand ec2 instances
 #
 data "aws_servicequotas_service_quota" "on_demand_instance_quota" {
-  count = var.use_spot_instance ? 0 : 1
-  quota_name = "Running On-Demand G and VT instances"
+  count        = var.use_spot_instance ? 0 : 1
+  quota_name   = "Running On-Demand G and VT instances"
   service_code = "ec2"
   lifecycle {
     postcondition {
-      condition = self.value > 3
+      condition     = self.value > 3
       error_message = <<-EOT
       You need at least a quota for 4vCPUs to start a g5.xlarge instance. 
 

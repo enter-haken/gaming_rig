@@ -1,4 +1,4 @@
-.PHONY: venv, build, init, clean
+.PHONY: venv, build, requirements, requirements_dev, clean
 .ONESHELL:
 
 build: init build/variables.tf
@@ -9,8 +9,11 @@ venv:
 	[ -d ./venv ] || python3 -m venv venv
 	. venv/bin/activate
 
-init: venv
+requirements: venv
 	python3 -m pip install -r ./requirements.txt
+
+requirements_dev: venv
+	python3 -m pip install -r ./requirements-dev.txt
 
 clean:
 	rm ./venv/ -rf

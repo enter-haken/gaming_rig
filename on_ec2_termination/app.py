@@ -7,8 +7,6 @@ import logging
 import json
 import os
 
-# https://github.com/keithvassallomt/parsec-aws-automation/blob/master/SnapAndDelete.py
-
 app = Chalice(app_name='ec2_listener')
 APP_TAG = os.environ['APP_TAG']
 RIG_AMI_NAME = os.environ['RIG_AMI_NAME']

@@ -1,7 +1,3 @@
-# Generates a secure private key and encodes it as PEM
-# https://gmusumeci.medium.com/how-to-deploy-a-windows-server-ec2-instance-in-aws-using-terraform-dd86a5dbf731
-# https://github.com/KopiCloud/terraform-aws-windows-ec2-instance
-
 module "snapshot_lambda" {
   source                = "./on_ec2_termination/build"
   app_tag               = var.app_tag
@@ -131,6 +127,5 @@ resource "aws_instance" "rig_instance" {
     tags = {
       App = var.app_tag
     }
-
   }
 }

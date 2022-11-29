@@ -1,5 +1,3 @@
-# TODO: take windows ami if no snapshot is found
-
 locals {
   ip_regex = "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"
   availability_zone = element(tolist([

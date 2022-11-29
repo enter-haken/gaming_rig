@@ -27,26 +27,6 @@ output "instance_type" {
   description = "Requested instance type"
 }
 
-# output "spot_instance_id" {
-#   value       = var.use_spot_instance ?  aws_spot_instance_request.rig_instance.*.spot_instance_id : ""
-#   description = "The id for the gaming rig ec2 instance"
-# }
-# 
-# output "spot_instance_ip" {
-#   value       = var.use_spot_instance ?  aws_spot_instance_request.rig_instance.*.public_ip : ""
-#   description = "The external ip address for the gaming rig instance"
-# }
-# 
-# output "instance_id" {
-#   value       = var.use_spot_instance ? "" : aws_instance.rig_instance.*.host_id
-#   description = "The id for the gaming rig ec2 instance"
-# }
-# 
-# output "instance_ip" {
-#   value       = var.use_spot_instance ? "" : aws_instance.rig_instance.*.public_ip
-#   description = "The external ip address for the gaming rig instance"
-# }
-
 output "use_spot_instance" {
   value       = var.use_spot_instance
   description = "inicates, if a spot instance should be used for the gaming rig"

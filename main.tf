@@ -107,6 +107,9 @@ resource "aws_spot_instance_request" "rig_instance" {
     delete_on_termination = false
     volume_size           = var.rig_ami_root_ebs_size
     volume_type           = "gp3"
+    tags = {
+      App = var.app_tag
+    }
   }
 }
 
@@ -125,5 +128,9 @@ resource "aws_instance" "rig_instance" {
     delete_on_termination = false
     volume_size           = var.rig_ami_root_ebs_size
     volume_type           = "gp3"
+    tags = {
+      App = var.app_tag
+    }
+
   }
 }

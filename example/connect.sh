@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# TODO: take a look at the dcv config file
 echo "waiting for instance..."
-#nc -z $(terraform output -json gaming-rig | jq -r '.instance_ip') 8443
+timeout 300 sh -c 'until nc -z $0 $1; do sleep 10; done' $(terraform output -json gaming-rig | jq -r '.instance_ip') 8443
 
 dcvviewer config.dcv

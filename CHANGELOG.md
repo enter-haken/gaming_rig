@@ -2,6 +2,8 @@
 
 ## untagged 
 
+- fixed own ami password check
+- check if snapshot is in right state, if available
 - added lambda for snapshot creation
 - added vCPU quota check
 - use either spot instances or on demand g5 instances

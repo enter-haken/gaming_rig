@@ -122,12 +122,12 @@ There is a mouse setting available (Ctrl shift F8) to use the relative mouse pos
 
 [Amazon EC2 G5 Instances][2]
 
-## todo
+## first shutdown
 
-### Snapshot
+When you shutdown the server the fist time an **ami** is created.
+Everytime your server is **terminated** the **ami** will be updated.
 
-When you shutdown your server, all data is gone.
-You could create a snapshot manually, but this can be automated.
+After bigger games have been installed, creating the snapshot can take up to **one hour**.
 
 [1]: https://asdf-vm.com/guide/getting-started.html#_5-install-a-version
 [2]: https://aws.amazon.com/ec2/instance-types/g5/

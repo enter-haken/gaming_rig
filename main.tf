@@ -93,8 +93,8 @@ resource "aws_spot_instance_request" "rig_instance" {
   key_name             = aws_key_pair.key_pair.key_name
   security_groups      = [aws_security_group.default.name]
   wait_for_fulfillment = true
-  get_password_data    = true
-  user_data            = var.use_own_ami ? "" : file("${path.module}/provisioning.tpl")
+  get_password_data    = !var.use_own_ami
+  user_data            = var.use_own_ami ? null : file("${path.module}/provisioning.tpl")
   spot_type            = "one-time"
   iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
   valid_until          = timeadd(timestamp(), var.bet_valid_until)
@@ -116,8 +116,8 @@ resource "aws_instance" "rig_instance" {
   availability_zone    = local.availability_zone
   key_name             = aws_key_pair.key_pair.key_name
   security_groups      = [aws_security_group.default.name]
-  get_password_data    = true
-  user_data            = var.use_own_ami ? "" : file("${path.module}/provisioning.tpl")
+  get_password_data    = !var.use_own_ami 
+  user_data            = var.use_own_ami ? null : file("${path.module}/provisioning.tpl")
   iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
 
   root_block_device {

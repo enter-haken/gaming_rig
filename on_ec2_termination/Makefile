@@ -1,7 +1,9 @@
-.PHONY: venv, build, requirements, requirements_dev, clean
+.PHONY: venv, build, requirements, requirements_dev, clean, all
 .ONESHELL:
 
-build: init build/variables.tf
+all: clean build
+
+build: requirements build/variables.tf
 	chalice package --pkg-format terraform --stage prod ./build
 	echo $$(jq 'del(.terraform)' ./build/chalice.tf.json) > ./build/chalice.tf.json
 

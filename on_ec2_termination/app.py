@@ -94,6 +94,7 @@ def on_ec2_snapshot_succeeded(event: CloudWatchEvent):
             Architecture='x86_64',
             RootDeviceName='/dev/sda1',
             DryRun=False,
-            VirtualizationType='hvm')
+            VirtualizationType='hvm',
+            EnaSupport=True)
 
     app.log.info(f'Created image {ami["ImageId"]}.')

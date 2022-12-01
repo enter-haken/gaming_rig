@@ -67,7 +67,7 @@ module "gaming_rig" {
   #
   availability_zone = 1
   use_spot_instance = false
-  use_own_ami       = false
+  use_own_ami       = true 
   app_tag           = "gaming-rig"
 }
 

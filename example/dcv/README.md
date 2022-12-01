@@ -21,3 +21,9 @@ When you have installed your client, you can start it with
 ```
 $ dcvviewer
 ```
+
+## No suitable download found?
+
+If you don't find a suitable download, you can try the [docker variant][1].
+
+[1]: /gaming_rig/example/dcv/docker

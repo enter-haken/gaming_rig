@@ -1,6 +1,6 @@
 # Changelog
 
-## untagged 
+## [0.2.0] 2022-12-01
 
 - fixed own ami password check
 - check if snapshot is in right state, if available

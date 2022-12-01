@@ -1,8 +1,9 @@
 # DCV Client Dockerfile
 
-You can download the DCV client for many plattforms.
+You can download the DCV client for many platforms.
 
-For those, who are running Gentoo for example, it might be easier to use the Docker variant.
+For those who use Gentoo, for example, it may be easier to use the docker variant.
+
 
 ```
 $ make

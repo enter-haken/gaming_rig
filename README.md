@@ -71,7 +71,7 @@ After the gameserver is provisioned, you can use the **DCV viewer** to connect t
 
 ### instance credentials
 
-You can get your **instance password** by calling
+You can get your initial **instance password** by calling
 
 ```
 $ aws ec2 get-password-data \
@@ -82,6 +82,11 @@ $ aws ec2 get-password-data \
 Login as `Administrator` and the provided password.
 
 You can also use a [script][3], like it is used in the example folder.
+
+`get-password-data` does only work on the **first time run**,
+so the password **should be saved somewere**.
+
+You can also **change the password** on the first time run.
 
 ## troubleshooting
 
@@ -127,11 +132,13 @@ There is a mouse setting available (Ctrl shift F8) to use the relative mouse pos
 When you shutdown the server the fist time an **ami** is created.
 Everytime your server is **terminated** the **ami** will be updated.
 
+Snapshots are created incrementally.
 After bigger games have been installed, creating the snapshot can take up to **one hour**.
+Smaller changes should be **a matter of seconds**.
 
 [1]: https://asdf-vm.com/guide/getting-started.html#_5-install-a-version
 [2]: https://aws.amazon.com/ec2/instance-types/g5/
-[3]: example/create_nice_dcv_config_file.sh
+[3]: example/get_initial_password.sh
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -142,7 +149,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.42.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.44.0 |
 | <a name="provider_external"></a> [external](#provider\_external) | 2.2.3 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.2.3 |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | 4.0.4 |
@@ -168,6 +175,7 @@ No requirements.
 | [tls_private_key.key_pair](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [aws_ami.aws_windows_ami](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_ami.rig_ami](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_ebs_snapshot.rig_snapshot](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ebs_snapshot) | data source |
 | [aws_ec2_instance_type_offerings.offerings](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ec2_instance_type_offerings) | data source |
 | [aws_ec2_spot_price.spot_prices](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ec2_spot_price) | data source |
 | [aws_iam_policy.nvidia_driver_get_object_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |

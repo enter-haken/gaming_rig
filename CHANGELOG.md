@@ -2,7 +2,7 @@
 
 ## [0.2.0] 2022-12-01
 
-- fixed own ami password check
+- disable `get_password_data` for custom amis
 - check if snapshot is in right state, if available
 - added lambda for snapshot creation
 - added vCPU quota check

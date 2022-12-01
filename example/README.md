@@ -1,4 +1,4 @@
-# Start the rig
+# Start the rig the first time
 
 You can start the rig by
 

@@ -85,19 +85,20 @@ resource "aws_iam_instance_profile" "windows_instance_profile" {
 }
 
 resource "aws_spot_instance_request" "rig_instance" {
-  count                = var.use_spot_instance ? 1 : 0
-  ami                  = var.use_own_ami ? data.aws_ami.rig_ami[0].image_id : data.aws_ami.aws_windows_ami[0].image_id
-  spot_price           = local.request_price
-  instance_type        = var.instance_type
-  availability_zone    = local.availability_zone
-  key_name             = aws_key_pair.key_pair.key_name
-  security_groups      = [aws_security_group.default.name]
-  wait_for_fulfillment = true
-  get_password_data    = !var.use_own_ami
-  user_data            = var.use_own_ami ? null : file("${path.module}/provisioning.tpl")
-  spot_type            = "one-time"
-  iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
-  valid_until          = timeadd(timestamp(), var.bet_valid_until)
+  count                                = var.use_spot_instance ? 1 : 0
+  ami                                  = var.use_own_ami ? data.aws_ami.rig_ami[0].image_id : data.aws_ami.aws_windows_ami[0].image_id
+  spot_price                           = local.request_price
+  instance_type                        = var.instance_type
+  availability_zone                    = local.availability_zone
+  key_name                             = aws_key_pair.key_pair.key_name
+  security_groups                      = [aws_security_group.default.name]
+  wait_for_fulfillment                 = true
+  get_password_data                    = !var.use_own_ami
+  user_data                            = var.use_own_ami ? null : file("${path.module}/provisioning.tpl")
+  spot_type                            = "one-time"
+  iam_instance_profile                 = aws_iam_instance_profile.windows_instance_profile.id
+  valid_until                          = timeadd(timestamp(), var.bet_valid_until)
+  instance_initiated_shutdown_behavior = "terminate"
 
   root_block_device {
     delete_on_termination = false
@@ -110,15 +111,16 @@ resource "aws_spot_instance_request" "rig_instance" {
 }
 
 resource "aws_instance" "rig_instance" {
-  count                = var.use_spot_instance ? 0 : 1
-  ami                  = var.use_own_ami ? data.aws_ami.rig_ami[0].image_id : data.aws_ami.aws_windows_ami[0].image_id
-  instance_type        = var.instance_type
-  availability_zone    = local.availability_zone
-  key_name             = aws_key_pair.key_pair.key_name
-  security_groups      = [aws_security_group.default.name]
-  get_password_data    = !var.use_own_ami 
-  user_data            = var.use_own_ami ? null : file("${path.module}/provisioning.tpl")
-  iam_instance_profile = aws_iam_instance_profile.windows_instance_profile.id
+  count                                = var.use_spot_instance ? 0 : 1
+  ami                                  = var.use_own_ami ? data.aws_ami.rig_ami[0].image_id : data.aws_ami.aws_windows_ami[0].image_id
+  instance_type                        = var.instance_type
+  availability_zone                    = local.availability_zone
+  key_name                             = aws_key_pair.key_pair.key_name
+  security_groups                      = [aws_security_group.default.name]
+  get_password_data                    = !var.use_own_ami
+  user_data                            = var.use_own_ami ? null : file("${path.module}/provisioning.tpl")
+  iam_instance_profile                 = aws_iam_instance_profile.windows_instance_profile.id
+  instance_initiated_shutdown_behavior = "terminate"
 
   root_block_device {
     delete_on_termination = false

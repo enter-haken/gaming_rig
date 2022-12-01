@@ -1,9 +1,9 @@
-# start the rig
+# Start the rig
 
 You can start the rig by
 
 ```
-$ make up config
+$ make up password config
 ```
 
 After about **2 minutes** the instance should be reachable via **rdp**.
@@ -19,6 +19,8 @@ $ make connect
 ```
 
 will connect you to the instance.
+
+# First time connect
 
 On the desktop you will find a `$home\Desktop\provisioning` folder that contains some log files about the deployment. 
 You can simply delete this folder if you want.

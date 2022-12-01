@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 
 instance_ip=$(terraform output -json gaming-rig | jq -r '.instance_ip')
-instance_id=$(terraform output -json gaming-rig | jq -r '.instance_id')
-
-instance_password_response=$(aws ec2 get-password-data \
-  --instance-id $instance_id \
-  --priv-launch-key ./rig-windows-key-pair.pem)
-
-instance_password=$(echo $instance_password_response | jq -r '.PasswordData')
+instance_password=$(cat ./password.txt)
 
 cat <<EOT > config.dcv
 [version]

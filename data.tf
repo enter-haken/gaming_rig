@@ -5,9 +5,9 @@ data "external" "all_necessary_commands_are_available" {
       condition     = self.result.jq && self.result.wget && self.result.curl && self.result.tar && self.result.awk
       error_message = <<-EOT
       Some of neccessary commands can not be found.
-      
+
       You will need
-      
+
       * aws
       * terraform
       * jq
@@ -15,9 +15,9 @@ data "external" "all_necessary_commands_are_available" {
       * curl
       * tar
       * awk
-      
+
       to proceed.
-      
+
       Hint: `aws`, `terraform` and `jq` can be installed with `asdf install`.
       EOT
     }
@@ -31,7 +31,7 @@ data "external" "your_location" {
       condition     = can(regex(local.ip_regex, self.result.ip))
       error_message = <<-EOT
       A call to **curl https://ipinfo.io** was not successful.
-      
+
       The **IP address** is needed to set up the allowed IP address that is allowed for rdp.
       EOT
     }
@@ -80,6 +80,25 @@ data "aws_ec2_spot_price" "spot_prices" {
     postcondition {
       condition     = length(keys(self)) > 0
       error_message = "There should be at least one price."
+    }
+  }
+}
+
+data "aws_ebs_snapshot" "rig_snapshot" {
+  most_recent = true
+  owners      = ["self"]
+
+  filter {
+    name   = "tag:App"
+    values = [var.app_tag]
+  }
+  lifecycle {
+    postcondition {
+      # when you are provisioning the system, there is no snapshot in place
+      condition     = try(self.state == "completed", true)
+      error_message = <<-EOT
+      The current snapshot has not the state "completed"
+      EOT
     }
   }
 }

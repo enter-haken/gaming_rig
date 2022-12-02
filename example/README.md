@@ -20,7 +20,17 @@ $ make connect
 
 will connect you to the instance.
 
-# First time connect
-
 On the desktop you will find a `$home\Desktop\provisioning` folder that contains some log files about the deployment. 
 You can simply delete this folder if you want.
+
+# all the other times
+
+```
+$ make
+```
+
+will start a new instance, using a **custom ami** created before.
+As soon as the DCV server is up and running, the DCV client is started.
+
+When you shutdown your instance, the instance will be **terminated** and a 
+new snapshot will be taken.

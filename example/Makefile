@@ -1,3 +1,9 @@
+.PHONY: start, up, down, debug, password, config, connect
+
+start: up config
+	nc -z $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443 || true
+	dcvviewer config.dcv
+
 up:
 	terraform apply -auto-approve
 

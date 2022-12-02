@@ -6,9 +6,11 @@ build:
 
 run:
 	xauth nlist $$DISPLAY | sed -e 's/^..../ffff/' | xauth -f /tmp/.docker.xauth nmerge - && \
-	docker run --rm -e DISPLAY=unix$$DISPLAY \
+	docker run --rm \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v /tmp/.docker.xauth:/tmp/.docker.xauth:rw \
-		-v config.dcv:/tmp/config.dcv \
+		-v $(shell pwd)/config.dcv:/tmp/config.dcv \
+		-v /dev/dri/card0:/dev/dri/card0 \
+		-e DISPLAY=unix$$DISPLAY \
 		-e XAUTHORITY=/tmp/.docker.xauth \
 		-t nice_dcv_client

@@ -25,9 +25,10 @@ RUN echo "$USERNAME:$USERNAME" | chpasswd && \
     usermod  --uid ${uid} $USERNAME && \
     groupmod --gid ${gid} $USERNAME || true
 
-
 USER ${user}
 
 WORKDIR /home/${user}
 
-CMD [ "dcvviewer", "config.dcv" ]
+RUN touch /tmp/config.dcv
+
+ENTRYPOINT [ "dcvviewer", "/tmp/config.dcv" ]

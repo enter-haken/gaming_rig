@@ -1,21 +1,12 @@
-.PHONY: venv, build, requirements, requirements_dev, clean, all
+.PHONY: build, clean
 .ONESHELL:
 
-all: clean build
-
-build: requirements build/variables.tf
-	chalice package --pkg-format terraform --stage prod ./build
-	echo $$(jq 'del(.terraform)' ./build/chalice.tf.json) > ./build/chalice.tf.json
-
-venv:
+build: clean build/variables.tf
 	[ -d ./venv ] || python3 -m venv venv
 	. venv/bin/activate
-
-requirements: venv
-	python3 -m pip install -r ./requirements.txt
-
-requirements_dev: venv
 	python3 -m pip install -r ./requirements-dev.txt
+	chalice package --pkg-format terraform --stage prod ./build
+	echo $$(jq 'del(.terraform)' ./build/chalice.tf.json) > ./build/chalice.tf.json
 
 clean:
 	rm ./venv/ -rf

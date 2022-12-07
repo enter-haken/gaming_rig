@@ -2,6 +2,7 @@
 
 ## untaged
 
+- added parsec
 - When the provisioning is done, the example can be started with `make`.
 
 ## [0.2.0] 2022-12-01

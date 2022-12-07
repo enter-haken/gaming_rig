@@ -86,11 +86,13 @@ function download_and_install_dcv_server() {
     New-Item -Path "$registyRoot\session-management" -Force
     New-Item -Path "$registyRoot\filestorage" -Force
     New-Item -Path "$registyRoot\connectivity" -Force
+    New-Item -Path "$registyRoot\display" -Force
     
     # This creates a dcv server session 
     New-ItemProperty -Path "$registyRoot\session-management" -Name create-session -PropertyType DWord -Value 1
     New-ItemProperty -Path "$registyRoot\session-management" -Name owner -Value Administrator 
     New-ItemProperty -Path "$registyRoot\filestorage" -Name storage-root -Value $storageDir
+    New-ItemProperty -Path "$registyRoot\display" -Name max-num-heads -Value 1
 
     # This is optional. quality is poor for game performance
     New-ItemProperty -Path "$registyRoot\connectivity" -Name enable-quic-frontend -Value 1

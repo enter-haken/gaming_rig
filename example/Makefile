@@ -19,7 +19,13 @@ config:
 	./create_nice_dcv_config_file.sh
 
 wait_for_dcv_ready:
-	nc -w 600 -z $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443 || true
+	while ! nc -w 600 -z $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443; do sleep 3; done 
 
 connect:
 	dcvviewer config.dcv
+
+clean:
+	rm ./password.txt -f
+	rm ./config.dcv -f
+	rm ./terraform.tfstate -f
+	rm ./terraform.tfstate.backup -f

@@ -47,5 +47,7 @@ output "instance_ip" {
   description = "The external ip address for the gaming rig instance"
 }
 
-
-
+output "instance_password" {
+  value     = random_password.password.result
+  sensitive = true
+}

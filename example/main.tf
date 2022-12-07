@@ -65,12 +65,14 @@ module "gaming_rig" {
   # * 0 -> eu-central-1b
   # * 1 -> eu-central-1c
   #
-  availability_zone = 1
-  use_spot_instance = false
-  use_own_ami       = true 
-  app_tag           = "gaming-rig"
+  availability_zone     = 1
+  rig_ami_root_ebs_size = 512
+  use_spot_instance     = false
+  use_own_ami           = false
+  app_tag               = "gaming-rig"
 }
 
 output "gaming-rig" {
-  value = module.gaming_rig
+  value     = module.gaming_rig
+  sensitive = true
 }

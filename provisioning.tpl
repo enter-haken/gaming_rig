@@ -55,13 +55,6 @@ function install_nvidia_drivers() {
     $p.WaitForExit()
 }
 
-function cleanup() {
-    Remove-Item -Recurse -Force $ProvisioningBasePath\NVIDIA 
-    Remove-Item -Recurse -Force $ProvisioningBasePath\dcv
-    Remove-Item 'C:\Users\Administrator\EC2 Feedback.website'
-    Remove-Item 'C:\Users\Administrator\EC2 Microsoft Windows Guide.website'
-}
-
 function disable_licensing_page {
   New-ItemProperty `
     -Path "HKLM:\SOFTWARE\NVIDIA Corporation\Global\GridLicensing" `
@@ -92,12 +85,65 @@ function download_and_install_dcv_server() {
     $registyRoot = "Microsoft.PowerShell.Core\Registry::HKEY_USERS\S-1-5-18\Software\GSettings\com\nicesoftware\dcv"
     New-Item -Path "$registyRoot\session-management" -Force
     New-Item -Path "$registyRoot\filestorage" -Force
+    New-Item -Path "$registyRoot\connectivity" -Force
     
     # This creates a dcv server session 
     New-ItemProperty -Path "$registyRoot\session-management" -Name create-session -PropertyType DWord -Value 1
     New-ItemProperty -Path "$registyRoot\session-management" -Name owner -Value Administrator 
     New-ItemProperty -Path "$registyRoot\filestorage" -Name storage-root -Value $storageDir
+
+    # This is optional. quality is poor for game performance
+    New-ItemProperty -Path "$registyRoot\connectivity" -Name enable-quic-frontend -Value 1
 }
+
+function auto_login() {
+  # TODO: send cloud watch events instead of writing to file
+  $RegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+  $Password = (Get-SSMParameter -WithDecryption $true -Name '${password_ssm_parameter}').Value
+  net user Administrator "$Password"
+
+  New-ItemProperty -Path $RegistryPath -Name 'AutoAdminLogon' 
+  Set-ItemProperty -Path $RegistryPath -Name 'AutoAdminLogon' -Value "1" 
+
+  New-ItemProperty -Path $RegistryPath -Name 'DefaultUsername' 
+  Set-ItemProperty -Path $RegistryPath -Name 'DefaultUsername' -Value "Administrator" 
+
+  New-ItemProperty -Path $RegistryPath -Name 'DefaultPassword' 
+  Set-ItemProperty -Path $RegistryPath -Name 'DefaultPassword' -Value "$Password" 
+}
+
+# function parsec() {
+#     $InstallationFile = "$ProvisioningBasePath\parsec\Parsec-Cloud-Preparation-Tool-master.zip"
+#     $InstallationPath = "C:\parsec"
+#     $InstallationSoure = "https://github.com/parsec-cloud/Parsec-Cloud-Preparation-Tool/archive/refs/heads/master.zip"
+# 
+#     New-Item -Path "$ProvisioningBasePath\parsec" -ItemType Directory
+#     New-Item -Path $InstallationPath -ItemType Directory 
+# 
+#     Invoke-WebRequest -Uri $InstallationSoure -OutFile $InstallationFile 
+#     Expand-Archive $InstallationFile -DestinationPath $InstallationPath
+# 
+#     $Entrypoint = "$InstallationExtractPath\PostInstall\PostInstall.ps1"
+# 
+#     # start on login
+#     $Action = New-ScheduledTaskAction -Execute powershell.exe -WorkingDirectory $InstallationPath -Argument "-Command `"$Entrypoint -DontPromptPasswordUpdateGPU`""
+#     $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay $(New-TimeSpan -seconds 30)
+#     $Trigger.Delay = "PT30S"
+#     $TaskName = "Parsec-Cloud-Preparation-Tool"
+#     $SelfDestruct = New-ScheduledTaskAction -Execute powershell.exe -Argument "-WindowStyle Hidden -Command `"Disable-ScheduledTask -TaskName $TaskName`""
+#     Register-ScheduledTask -TaskName $TaskName -Trigger $Trigger -Action $Action, $SelfDestruct -RunLevel Highest 
+#     log "ScheduledTask created for parsec"
+# }
+
+function cleanup() {
+    Remove-Item -Recurse -Force $ProvisioningBasePath\NVIDIA 
+    Remove-Item -Recurse -Force $ProvisioningBasePath\dcv
+    Remove-Item -Recurse -Force $ProvisioningBasePath\parsec
+
+    Remove-Item 'C:\Users\Administrator\EC2 Feedback.website'
+    Remove-Item 'C:\Users\Administrator\EC2 Microsoft Windows Guide.website'
+}
+
 
 log "start provisioning"
 
@@ -130,6 +176,13 @@ try {
   log "download and install dcv server"
   download_and_install_dcv_server
   log "dcv server installed"
+
+  log "setup auto_login"
+  auto_login
+  
+  log "install parsec"
+  choco install parsec
+  log "parsec installed"
 
   cleanup
 

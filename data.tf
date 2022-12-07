@@ -84,24 +84,24 @@ data "aws_ec2_spot_price" "spot_prices" {
   }
 }
 
-data "aws_ebs_snapshot" "rig_snapshot" {
-  most_recent = true
-  owners      = ["self"]
-
-  filter {
-    name   = "tag:App"
-    values = [var.app_tag]
-  }
-  lifecycle {
-    postcondition {
-      # when you are provisioning the system, there is no snapshot in place
-      condition     = try(self.state == "completed", true)
-      error_message = <<-EOT
-      The current snapshot has not the state "completed"
-      EOT
-    }
-  }
-}
+#data "aws_ebs_snapshot" "rig_snapshot" {
+#  most_recent = true
+#  owners      = ["self"]
+#
+#  filter {
+#    name   = "tag:App"
+#    values = [var.app_tag]
+#  }
+#  lifecycle {
+#    postcondition {
+#      # when you are provisioning the system, there is no snapshot in place
+#      condition     = try(self.state == "completed", true)
+#      error_message = <<-EOT
+#      The current snapshot has not the state "completed"
+#      EOT
+#    }
+#  }
+#}
 
 data "aws_ami" "aws_windows_ami" {
   count       = var.use_own_ami ? 0 : 1

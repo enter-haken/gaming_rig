@@ -1,7 +1,6 @@
-.PHONY: start, up, down, debug, password, config, connect
+.PHONY: start, up, down, debug, password, config, connect, wait_for_dcv_ready
 
-start: up config
-	nc -z $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443 || true
+start: up config wait_for_dcv_ready
 	dcvviewer config.dcv
 
 up:
@@ -19,6 +18,8 @@ password:
 config:
 	./create_nice_dcv_config_file.sh
 
+wait_for_dcv_ready:
+	nc -z $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443 || true
+
 connect:
 	dcvviewer config.dcv
-

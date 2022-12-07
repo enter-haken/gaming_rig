@@ -20,6 +20,9 @@ certificatevalidationpolicy=accept-untrusted
 [options]
 fullscreen=false
 useallmonitors=false
+
+[display]
+max-num-heads=1
 EOT
 
 echo ""

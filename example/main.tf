@@ -67,6 +67,8 @@ module "gaming_rig" {
   #
   availability_zone     = 1
   rig_ami_root_ebs_size = 512
+  iops                  = 16000
+  throughput            = 1000
   use_spot_instance     = false
   use_own_ami           = false
   app_tag               = "gaming-rig"

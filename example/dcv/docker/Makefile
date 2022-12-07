@@ -7,6 +7,7 @@ build:
 run:
 	xauth nlist $$DISPLAY | sed -e 's/^..../ffff/' | xauth -f /tmp/.docker.xauth nmerge - && \
 	docker run --rm \
+		--device /dev/snd \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v /tmp/.docker.xauth:/tmp/.docker.xauth:rw \
 		-v $(shell pwd)/config.dcv:/tmp/config.dcv \

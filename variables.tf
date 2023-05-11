@@ -70,13 +70,3 @@ variable "use_own_ami" {
   type        = bool
   default     = false
 }
-
-variable "iops" {
-  description = "root volume iops"
-  default     = 3000
-}
-
-variable "throughput" {
-  description = "root volume throughput"
-  default     = 125
-}

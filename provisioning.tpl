@@ -55,6 +55,10 @@ function install_nvidia_drivers() {
     $p.WaitForExit()
 }
 
+function disable_default_display() {
+    Get-PnpDevice | where {$_.FriendlyName -like "Microsoft Basic Display*" -and $_.Status -eq "OK" -and $_.Class -eq "Display"} | Disable-PnpDevice
+}
+
 function disable_licensing_page {
   New-ItemProperty `
     -Path "HKLM:\SOFTWARE\NVIDIA Corporation\Global\GridLicensing" `
@@ -87,12 +91,15 @@ function download_and_install_dcv_server() {
     New-Item -Path "$registyRoot\filestorage" -Force
     New-Item -Path "$registyRoot\connectivity" -Force
     New-Item -Path "$registyRoot\display" -Force
+    New-Item -Path "$registyRoot\security" -Force
     
     # This creates a dcv server session 
     New-ItemProperty -Path "$registyRoot\session-management" -Name create-session -PropertyType DWord -Value 1
     New-ItemProperty -Path "$registyRoot\session-management" -Name owner -Value Administrator 
     New-ItemProperty -Path "$registyRoot\filestorage" -Name storage-root -Value $storageDir
     New-ItemProperty -Path "$registyRoot\display" -Name max-num-heads -Value 1
+    New-ItemProperty -Path "$registyRoot\display" -Name web-client-max-head-resolution -Value (3840,2160) 
+    New-ItemProperty -Path "$registyRoot\security" -Name authentication -Value None 
 
     # This is optional. quality is poor for game performance
     New-ItemProperty -Path "$registyRoot\connectivity" -Name enable-quic-frontend -Value 1
@@ -142,8 +149,8 @@ function cleanup() {
     Remove-Item -Recurse -Force $ProvisioningBasePath\dcv
     Remove-Item -Recurse -Force $ProvisioningBasePath\parsec
 
-    Remove-Item 'C:\Users\Administrator\EC2 Feedback.website'
-    Remove-Item 'C:\Users\Administrator\EC2 Microsoft Windows Guide.website'
+    Remove-Item 'C:\Users\Administrator\Desktop\EC2 Feedback.website'
+    Remove-Item 'C:\Users\Administrator\Desktop\EC2 Microsoft Windows Guide.website'
 }
 
 
@@ -173,6 +180,7 @@ try {
 
   log "installing NVIDIA drivers"
   install_nvidia_drivers
+  disable_default_display 
   log "NVIDIA drivers installed"
 
   log "download and install dcv server"

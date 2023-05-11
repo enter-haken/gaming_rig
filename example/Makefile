@@ -1,7 +1,9 @@
-.PHONY: start, up, down, debug, password, config, connect, wait_for_dcv_ready
+.PHONY: start, up, down, debug, password, config, connect, wait_for_dcv_ready, init, clean
 
 start: up config wait_for_dcv_ready
 	dcvviewer config.dcv
+
+init: up password config wait_for_dcv_ready
 
 up:
 	terraform apply -auto-approve
@@ -19,7 +21,7 @@ config:
 	./create_nice_dcv_config_file.sh
 
 wait_for_dcv_ready:
-	while ! nc -w 600 -z $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443; do sleep 3; done 
+	while ! nc -zv $$(terraform output -json gaming-rig | jq -r '.instance_ip') 8443; do sleep 3; done 
 
 connect:
 	dcvviewer config.dcv

@@ -66,11 +66,9 @@ module "gaming_rig" {
   # * 1 -> eu-central-1c
   #
   availability_zone     = 1
-  rig_ami_root_ebs_size = 512
-  iops                  = 16000
-  throughput            = 1000
-  use_spot_instance     = false
-  use_own_ami           = false
+  rig_ami_root_ebs_size = 256 
+  use_spot_instance     = false 
+  use_own_ami           = true 
   app_tag               = "gaming-rig"
 }
 

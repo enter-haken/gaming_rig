@@ -108,7 +108,7 @@ data "aws_ami" "aws_windows_ami" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["Windows_Server-2022-English-Full-Base-2022.10.12"]
+    values = ["Windows_Server-2022-English-Full-Base-2022.*"]
   }
 }
 
